@@ -25,8 +25,8 @@ $tema = $_COOKIE['temita'] ?? 'claro';
 
 // Define los textos del menú en ambos idiomas con sus rutas correspondientes.
 $menu_texts = [
-    'espanol' => ['Inicio', 'Lista Deseados', 'Carrito', 'Login', 'Logout', './img/config.png'],
-    'ingles'  => ['Home', 'Wishlist', 'Cart', 'Login', 'Logout', './img/config.png']
+    'espanol' => ['Inicio', 'Lista Deseados', 'Carrito', 'Login', 'Logout', './src/images/others/config.png'],
+    'ingles'  => ['Home', 'Wishlist', 'Cart', 'Login', 'Logout', './src/images/others/config.png']
 ];
 
 // Selecciona los textos del menú según el idioma almacenado en la cookie.
