@@ -16,4 +16,3 @@
 
 <?php include './footer.php'; ?>
 
-//Hola
