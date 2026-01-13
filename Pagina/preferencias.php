@@ -1,4 +1,3 @@
-
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -33,12 +32,12 @@ $tema_class = ($tema_actual === 'oscuro') ? 'oscuro' : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/styleSettings.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./src/styles/styleSettings.css">
+    <link rel="stylesheet" href="./src/styles/style.css">
     <title>TuTiendaDeConfi</title>
 </head>
 <body>
-    <?php include_once './menu/header.php' ?>
+    <?php include_once './header.php' ?>
     <fieldset>
         <legend><?php echo ($idioma == 'espanol') ? "Ajustes" : "Settings"; ?></legend>
         
@@ -79,6 +78,6 @@ $tema_class = ($tema_actual === 'oscuro') ? 'oscuro' : '';
         </form>
 
     </fieldset>
-    <?php include_once './menu/footer.php' ?>
+    <?php include_once './footer.php' ?>
 </body>
 </html>

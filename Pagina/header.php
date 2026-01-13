@@ -3,7 +3,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-// include_once './productos/productos.php';
+include_once './productos.php';
 
 // Obtiene el rol del usuario desde la sesión o asigna "invitado" si no existe.
 $rol_usuario = $_SESSION['usuario_rol'] ?? 'invitado';
@@ -62,7 +62,7 @@ $tema_class = ($tema === 'oscuro') ? 'oscuro' : '';
 
     <menu>
         <ul>
-            <li><a href="./index.php"><button><?php echo $text[0]; ?></button></a></li>
+            <li><a href="./Principal.php"><button><?php echo $text[0]; ?></button></a></li>
             <li><a href="./listaDeseados.php"><button><?php echo $text[1]; ?></button></a></li>
             <li><a href="./carrito.php"><button><?php echo $text[2]; ?></button></a></li>
             
