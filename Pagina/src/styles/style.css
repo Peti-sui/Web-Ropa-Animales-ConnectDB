@@ -76,7 +76,7 @@ main .contenido {
 
 main .producto {
     box-sizing: border-box;
-    width: 300px;
+    width: 250px;
     height: auto;
     border: 1px solid #ccc;
     padding: 10px;
@@ -95,7 +95,7 @@ main .producto:hover {
 
 main .product-image-container {
     width: 100%;
-    height: 600px;
+    height: 300px;
     margin-bottom: 10px;
 }
 

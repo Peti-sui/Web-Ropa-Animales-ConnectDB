@@ -14,7 +14,7 @@ $usuario_registrado = ($rol_usuario !== 'invitado');
 // Redirige a login si se envía un formulario POST y el usuario no está autenticado.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$usuario_registrado) {
-        header('Location: ./login.php');
+        header('Location: ./principal.php');
         exit();
     }
 }
@@ -62,7 +62,7 @@ $tema_class = ($tema === 'oscuro') ? 'oscuro' : '';
 
     <menu>
         <ul>
-            <li><a href="./Principal.php"><button><?php echo $text[0]; ?></button></a></li>
+            <li><a href="./principal.php"><button><?php echo $text[0]; ?></button></a></li>
             <li><a href="./listaDeseados.php"><button><?php echo $text[1]; ?></button></a></li>
             <li><a href="./carrito.php"><button><?php echo $text[2]; ?></button></a></li>
             
@@ -70,6 +70,13 @@ $tema_class = ($tema === 'oscuro') ? 'oscuro' : '';
                 <li><a href="./login.php"><button><?php echo $text[3]; ?></button></a></li>
             <?php else:?>
                 <li><a href="./logout.php"><button><?php echo $text[4]; ?></button></a></li>
+
+
+            <?php if ($rol_usuario === 'admin'): ?>
+                <li><a href="./guardar.php"><button>Insertar productos</button></a></li>
+                <?php endif; ?>
+
+                    
             <?php endif; ?>
             
             <li>

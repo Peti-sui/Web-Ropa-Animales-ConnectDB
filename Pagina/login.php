@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errores)) {
         if ($usuario === 'admin' && $contrasena === '1234') {
             $_SESSION['usuario_rol'] = 'admin'; 
-            header('Location: ./Principal.php');
+            header('Location: ./principal.php');
             exit();
         } else {
             $_SESSION['usuario_rol'] = 'normal';
-            header('Location: ./Principal.php');
+            header('Location: ./principal.php');
             exit();
         }
     }
