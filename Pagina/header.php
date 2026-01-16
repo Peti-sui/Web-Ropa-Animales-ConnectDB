@@ -25,8 +25,8 @@ $tema = $_COOKIE['temita'] ?? 'claro';
 
 // Define los textos del menú en ambos idiomas con sus rutas correspondientes.
 $menu_texts = [
-    'espanol' => ['Inicio', 'Lista Deseados', 'Carrito', 'Login', 'Logout', './src/images/others/config.png'],
-    'ingles'  => ['Home', 'Wishlist', 'Cart', 'Login', 'Logout', './src/images/others/config.png']
+    'espanol' => ['Inicio', 'Lista Deseados', 'Carrito', 'Login', 'Logout', 'Insertar productos', 'Eliminar Productos','./src/images/others/config.png'],
+    'ingles'  => ['Home', 'Wishlist', 'Cart', 'Login', 'Logout', 'Insert Products', 'Delete Products','./src/images/others/config.png']
 ];
 
 // Selecciona los textos del menú según el idioma almacenado en la cookie.
@@ -66,23 +66,21 @@ $tema_class = ($tema === 'oscuro') ? 'oscuro' : '';
             <li><a href="./listaDeseados.php"><button><?php echo $text[1]; ?></button></a></li>
             <li><a href="./carrito.php"><button><?php echo $text[2]; ?></button></a></li>
             
+            <?php if ($rol_usuario === 'admin'): ?>
+                <li><a href="./guardar.php"><button><?php echo $text[5]; ?></button></a></li>
+                <li><a href="./eliminar.php"><button><?php echo $text[6]; ?></button></a></li>
+            <?php endif; ?>
+
             <?php if (!$usuario_registrado):?>
                 <li><a href="./login.php"><button><?php echo $text[3]; ?></button></a></li>
             <?php else:?>
                 <li><a href="./logout.php"><button><?php echo $text[4]; ?></button></a></li>
-
-
-            <?php if ($rol_usuario === 'admin'): ?>
-                <li><a href="./guardar.php"><button>Insertar productos</button></a></li>
-                <?php endif; ?>
-
-                    
             <?php endif; ?>
             
             <li>
                 <a href="./preferencias.php"> 
                     <button class="image">
-                        <img src="<?php echo $text[5]; ?>" alt="Settings">
+                        <img src="<?php echo $text[7]; ?>" alt="Settings">
                     </button>
                 </a>
             </li>
