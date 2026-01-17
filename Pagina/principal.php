@@ -78,12 +78,13 @@ while ($row = $result->fetch_assoc()) {
             </div>
             <h3><?php echo $nombreProducto; ?></h3>
             <p><strong><?php echo ($idioma_actual == 'espanol') ? 'Precio:' : 'Price:'; ?> <?php echo number_format($producto['precio'],2); ?> €</strong></p>
-                <button class="agregar-al-carrito">
-                    <?php 
-                    echo ($idioma_actual == 'espanol') ? 
-                            "Añadir al carrito" : 
-                            "Add to cart"; 
-                    ?>
+            <form method="POST" action="carrito.php">
+    <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+    <button type="submit" name="añadir_producto_carrito" class="agregar-al-carrito">
+        <?php echo ($idioma_actual == 'espanol') ? "Añadir al carrito" : "Add to cart"; ?>
+    </button>
+</form>
+
                 </button>
 
                 <form method="POST" action="listaDeseados.php">
