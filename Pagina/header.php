@@ -42,8 +42,7 @@ $tema_class = ($tema === 'oscuro') ? 'oscuro' : '';
     <link
       rel="icon"
       type="image/png"
-      sizes="32x32"
-      href="./src/images/others/cat.png"
+      href="./src/images/others/favicon-32x32.png"
     />
     <title>
         <?php if($idioma == 'espanol') {
