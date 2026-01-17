@@ -39,7 +39,7 @@ $tema_class = ($tema === 'oscuro') ? 'oscuro' : '';
 <html lang="<?php echo $idioma_actual; ?>" class="<?php echo $tema_class; ?>">
 <head>
     <meta charset="UTF-8">
-    <title>TuTiendaDeConfi</title>
+    <title>Patitas Alegres</title>
     <link rel="stylesheet" href="./src/styles/style.css">
 </head>
 <body> 

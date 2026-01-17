@@ -60,7 +60,6 @@ while ($row = $result->fetch_assoc()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/styles/style.css">
-    <title>Principal</title>
 </head>
 <body>
 <main>
@@ -87,16 +86,13 @@ while ($row = $result->fetch_assoc()) {
                     ?>
                 </button>
 
-                <form method="POST" action="">
-                    <input type="hidden" name="producto_id" value="<?php echo $id; ?>">
+                <form method="POST" action="listaDeseados.php">
+                    <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
                     <button type="submit" name="añadir_producto_lista">
-                        <?php 
-                        echo ($idioma_actual == 'espanol') ? 
-                                "Añadir a Deseados" : 
-                                "Add to Wishlist"; 
-                        ?>
+                        <?php echo ($idioma_actual == 'espanol') ? "Añadir a Deseados" : "Add to Wishlist"; ?>
                     </button>
                 </form>
+
         </div>
     <?php endforeach; ?>
 <?php else: ?>
@@ -118,7 +114,7 @@ while ($row = $result->fetch_assoc()) {
 </p>
 
 </main>
+<?php include './footer.php'; ?>
 </body>
 </html>
 
-<?php include './footer.php'; ?>

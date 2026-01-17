@@ -1,13 +1,10 @@
 <?php
+require "conexion.php";
 
-// Lógica de idioma consistente con tu segundo archivo
-if (isset($_COOKIE['idiomita']) && $_COOKIE['idiomita'] == 'espanol') {
-    $idioma_actual = 'espanol';
-} else {
-    $idioma_actual = 'ingles';
-}
+// Gestión de Idioma
+$idioma_actual = (isset($_COOKIE['idiomita']) && $_COOKIE['idiomita'] == 'espanol') ? 'espanol' : 'ingles';
 
-// Funciones para gestionar la cookie
+// Funciones de Cookie
 function recibirCookieDeseados() {
     if (isset($_COOKIE['listaDeseados'])) {
         $list = json_decode($_COOKIE['listaDeseados'], true);
@@ -17,112 +14,130 @@ function recibirCookieDeseados() {
 }
 
 function guardarCookieDeseados($list) {
-    $cookie_value = json_encode(array_values($list)); // array_values para reindexar
-    setcookie('listaDeseados', $cookie_value, time() + 60*60*48, "/"); // "/" para que sea accesible en toda la web
+    setcookie('listaDeseados', json_encode(array_values($list)), time() + (86400 * 30), "/");
 }
 
 $listaDeseados = recibirCookieDeseados();
 
-// Lógica para AÑADIR (por si vienes del otro PHP mediante POST)
-if (isset($_POST['añadir_producto_lista'], $_POST['producto_id'])) {
-    $id_nuevo = (int)$_POST['producto_id'];
-    if (!in_array($id_nuevo, $listaDeseados)) {
-        $listaDeseados[] = $id_nuevo;
-        guardarCookieDeseados($listaDeseados);
+// --- PROCESAR POST (Añadir, Eliminar, Vaciar) ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    // AÑADIR (Viene de principal.php)
+    if (isset($_POST['añadir_producto_lista'], $_POST['producto_id'])) {
+        $id_nuevo = (int)$_POST['producto_id'];
+        if (!in_array($id_nuevo, $listaDeseados)) {
+            $listaDeseados[] = $id_nuevo;
+            guardarCookieDeseados($listaDeseados);
+        }
     }
-    header("Location: " . $_SERVER['PHP_SELF']);
+
+    // ELIMINAR UNO
+    if (isset($_POST['remove_wish'], $_POST['producto_id'])) {
+        $id_eliminar = (int)$_POST['producto_id'];
+        $posicion = array_search($id_eliminar, $listaDeseados);
+        if ($posicion !== false) {
+            unset($listaDeseados[$posicion]);
+            guardarCookieDeseados($listaDeseados);
+        }
+    }
+
+    // VACIAR TODO
+    if (isset($_POST['clear_list'])) {
+        $listaDeseados = [];
+        guardarCookieDeseados([]);
+    }
+
+    // Redirigir siempre después de un POST para que la cookie se actualice en el navegador
+    header("Location: listaDeseados.php");
     exit;
 }
 
-// Eliminar un producto
-if (isset($_POST['remove_wish'], $_POST['producto_id'])) {
-    $id_a_eliminar = (int)$_POST['producto_id'];
-    $clave = array_search($id_a_eliminar, $listaDeseados);
-    if ($clave !== false) {
-        unset($listaDeseados[$clave]);
+// 2. OBTENER PRODUCTOS DE LA BASE DE DATOS
+$productos_db = [];
+if (!empty($listaDeseados)) {
+    $ids_limpios = implode(',', array_map('intval', $listaDeseados));
+    $sql = "SELECT * FROM productos WHERE id IN ($ids_limpios)";
+    $result = $conn->query($sql);
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $productos_db[$row['id']] = $row;
+        }
     }
-    guardarCookieDeseados($listaDeseados);
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
 }
 
-// Vaciar lista
-if (isset($_POST['clear_list'])) {
-    guardarCookieDeseados([]);
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
+include './header.php'; 
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Ajustado a la ruta de CSS del segundo archivo -->
     <link rel="stylesheet" href="./src/styles/style.css">
-    <title>TuTiendaDeConfi - Wishlist</title>
+    <title>Mi Lista de Deseados</title>
 </head>
 <body>
-    <?php include './header.php';?>
+<main class="contenido">
+    <fieldset style="width: 90%; max-width: 800px; margin: 20px auto; padding: 20px; border-radius: 10px;">
+        <legend style="padding: 0 10px; font-weight: bold;">
+            <?php echo ($idioma_actual == 'espanol') ? "Mi Lista de Deseados" : "My Wishlist"; ?>
+        </legend>
 
-    <main class="contenido">
-        <fieldset style="width: 80%; margin: 20px auto; padding: 20px; border-radius: 8px;">
-            <legend>
-                <?php echo ($idioma_actual == 'espanol') ? "Mi Lista de Deseados" : "My Wishlist";?>
-            </legend>
-            
-            <div class="wishlist-container">
-                <?php 
-                $vacia = true;
-                if (!empty($listaDeseados)):
-                    foreach ($listaDeseados as $producto_id):
-                        // Verificamos que el producto exista en el array de datos
-                        if (isset($productos[$producto_id])):
-                            $vacia = false;
-                            $item = $productos[$producto_id];
-                            $nombre = $item['nombre'][$idioma_actual];
-                            $precio = $item['precio'];
-                ?>
-
-                <div class="producto" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+        <div class="wishlist-items">
+            <?php 
+            $hay_productos = false;
+            foreach ($listaDeseados as $id_id):
+                if (isset($productos_db[$id_id])):
+                    $hay_productos = true;
+                    $p = $productos_db[$id_id];
+                    $nombre = ($idioma_actual == 'espanol') ? $p['nombre_es'] : $p['nombre_en'];
+            ?>
+                <div class="producto-lista" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
                     <div style="display: flex; align-items: center;">
-                        <img src="<?php echo ($item['imagen'] ?? 'img/default.jpg'); ?>" alt="<?php echo $nombre; ?>" style="width: 50px; margin-right: 15px;">
+                        <img src="<?php echo $p['imagen']; ?>" alt="img" style="width: 60px; height: 60px; object-fit: cover; margin-right: 20px; border-radius: 5px;">
                         <div>
-                            <strong><?php echo $nombre; ?></strong><br>
-                            <?php echo number_format($precio, 2); ?> €
+                            <h4 style="margin: 0;"><?php echo $nombre; ?></h4>
+                            <p style="margin: 5px 0 0; color: #666;"><?php echo number_format($p['precio'], 2); ?> €</p>
                         </div>
                     </div>
-
+                    
                     <form method="POST">
-                        <input type="hidden" name="producto_id" value="<?php echo $producto_id; ?>">
-                        <button type="submit" name="remove_wish" style="background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer;">
-                            <?php echo ($idioma_actual == 'espanol') ? "Eliminar" : "Remove"; ?> 
+                        <input type="hidden" name="producto_id" value="<?php echo $id_id; ?>">
+                        <button type="submit" name="remove_wish" style="background: #e74c3c; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px;">
+                            <?php echo ($idioma_actual == 'espanol') ? "Eliminar" : "Remove"; ?>
                         </button>
                     </form>
                 </div>
-
-                <?php
-                        endif;
-                    endforeach;
+            <?php 
                 endif;
+            endforeach; 
 
-                if ($vacia):
-                    echo "<p>" . (($idioma_actual == 'espanol') ? "Tu lista está vacía." : "Your wishlist is empty.") . "</p>";
-                endif;
-                ?>
-            </div>
+            if (!$hay_productos): ?>
+                <p style="text-align: center; padding: 20px;">
+                    <?php echo ($idioma_actual == 'espanol') ? "No tienes productos en tu lista." : "Your wishlist is empty."; ?>
+                </p>
+            <?php endif; ?>
+        </div>
 
-            <?php if (!$vacia): ?>
-            <form method="POST" style="text-align: center; margin-top: 20px;">
-                <button type="submit" name="clear_list" class="deseados" style="padding: 10px 20px; cursor: pointer;">
-                    <?php echo ($idioma_actual == 'espanol') ? "Vaciar lista completa" : "Clear full wishlist"; ?>
+        <?php if ($hay_productos): ?>
+        <div style="text-align: center; margin-top: 30px;">
+            <form method="POST">
+                <button type="submit" name="clear_list" style="background: #333; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer;">
+                    <?php echo ($idioma_actual == 'espanol') ? "Vaciar Lista Completa" : "Clear All"; ?>
                 </button>
             </form>
-            <?php endif; ?>
-        </fieldset>
-    </main>
+        </div>
+        <?php endif; ?>
+    </fieldset>
+</main>
 
-    <?php include './footer.php';?>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="principal.php" style="color: #007bff; text-decoration: none;">
+            ← <?php echo ($idioma_actual == 'espanol') ? "Volver a la tienda" : "Back to shop"; ?>
+        </a>
+    </div>
+
+    <!-- Kevin te dejar ir -->
+<?php include './footer.php'; ?>
 </body>
 </html>
