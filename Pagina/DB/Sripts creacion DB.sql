@@ -33,8 +33,8 @@ CREATE TABLE compras (
 );
 
 truncate table compras;
-drop table compras;
 select * from compras;
+select * from productos;
 
 INSERT INTO productos (nombre_es, nombre_en, precio, imagen) VALUES
 -- GATOS
@@ -57,9 +57,5 @@ INSERT INTO productos (nombre_es, nombre_en, precio, imagen) VALUES
 ('Chaqueta acolchada rosa y azul para hámster', 'Pink and Blue Puffer Jacket for Hamster', 16.90, './src/images/hamsters/Hamster3.png'),
 ('Abrigo azul marino con bufanda naranja para hámster', 'Navy Coat with Orange Scarf for Hamster', 15.00, './src/images/hamsters/Hamster4.png'),
 ('Chaqueta marrón con camisa vaquera y pajarita para hámster', 'Brown Jacket with Denim Shirt and Bow Tie for Hamster', 17.25, './src/images/hamsters/Hamster5.png');
-
-
-
-select * from productos;
 
 

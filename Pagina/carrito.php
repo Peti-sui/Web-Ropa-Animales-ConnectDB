@@ -1,11 +1,18 @@
 <?php
-require "./config/conexion.php";
+require "./config/conexion.php"; 
+/* Se incluye el archivo de conexión a la base de datos. 
+   Esto permite que $conn esté disponible para consultas posteriores. */
 
 // 1. Gestión de Idioma
 $idioma_actual = (isset($_COOKIE['idiomita']) && $_COOKIE['idiomita'] == 'espanol') ? 'espanol' : 'ingles';
+/* Determina el idioma actual de la interfaz basado en la cookie 'idiomita'. 
+   Si no existe o no es 'espanol', se establece 'ingles' por defecto. */
 
 // 2. Funciones de Cookie
 function recibirCookieCarrito() {
+    /* Recupera la lista de productos del carrito almacenada en la cookie 'listaCarrito'.
+       Decodifica el JSON a un array asociativo. 
+       Si no existe o no es un array válido, devuelve un array vacío. */
     if (isset($_COOKIE['listaCarrito'])) {
         $list = json_decode($_COOKIE['listaCarrito'], true);
         return is_array($list) ? $list : [];
@@ -14,33 +21,40 @@ function recibirCookieCarrito() {
 }
 
 function guardarCookieCarrito($list) {
+    /* Guarda el carrito en una cookie llamada 'listaCarrito'.
+       Convierte el array a JSON y establece expiración a 30 días. */
     setcookie('listaCarrito', json_encode($list), time() + (86400 * 30), "/");
 }
 
 $listaCarrito = recibirCookieCarrito();
-
+/* Obtiene la lista actual del carrito desde la cookie para manipularla durante la sesión. */
 
 $productos_db = [];
 if (!empty($listaCarrito)) {
+    /* Si el carrito tiene productos, obtiene sus datos desde la base de datos. */
     $ids_limpios = implode(',', array_map('intval', array_keys($listaCarrito)));
+    /* Sanitiza los IDs del carrito convirtiéndolos a enteros para prevenir inyección SQL. */
     $sql = "SELECT * FROM productos WHERE id IN ($ids_limpios)";
     $result = $conn->query($sql);
     if ($result) {
         while ($row = $result->fetch_assoc()) {
             $productos_db[$row['id']] = $row;
+            /* Almacena cada producto en un array asociativo con la clave siendo el ID */
         }
     }
 }
 
 // --- 4. PROCESAR POST (Ahora con datos disponibles) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    /* Detecta si se ha enviado un formulario mediante POST para procesar acciones del carrito. */
 
     if (isset($_POST['realizar_pedido'])) {
+        /* Procesa la compra: guarda cada producto en la tabla 'compras'. */
         foreach ($listaCarrito as $id_db => $cant) {
             if (isset($productos_db[$id_db])) {
                 $p = $productos_db[$id_db];
                 $precio_total = $p['precio'] * $cant;
-    
+
                 $stmt = $conn->prepare("INSERT INTO compras (nombre_es, nombre_en, cantidad, precio_total) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param("ssid", $p['nombre_es'], $p['nombre_en'], $cant, $precio_total);
                 $stmt->execute();
@@ -93,9 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header("Location: ./carrito.php");
     exit;
+    /* Redirige al carrito después de cualquier acción POST para evitar reenvíos. */
 }
 
 include './includes/header.php'; 
+/* Incluye la cabecera HTML y los recursos compartidos (CSS, JS, menú, etc.) */
 ?>
 
 <!-- El resto de tu HTML permanece exactamente igual -->
@@ -111,12 +127,14 @@ include './includes/header.php';
 <main class="contenido">
     <fieldset class="contenedor-lista">
         <legend><?php echo ($idioma_actual=='espanol') ? "Tu Cesta de la Compra" : "Your Shopping Cart"; ?></legend>
+        <!-- Título dinámico según idioma -->
 
         <div id="items-del-carrito">
             <?php 
             $hay_productos = false;
             $total_precio = 0;
             $cantidad_total = 0;
+            /* Inicializa variables de control y totales */
 
             foreach ($listaCarrito as $id_id => $cant):
                 if (isset($productos_db[$id_id])):
@@ -126,6 +144,7 @@ include './includes/header.php';
                     $subtotal = $p['precio'] * $cant;
                     $total_precio += $subtotal;
                     $cantidad_total += $cant;
+                    /* Calcula subtotal, suma totales y determina el idioma del nombre del producto */
             ?>
             <div class="item-fila">
                 <div class="info-basica">
