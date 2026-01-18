@@ -102,6 +102,14 @@ Pagina/
 
 ## Autores
 
-Rau00 y Peti-sui(Kevin)
+<div align="center">
+
+| Rau00 | Peti-sui (Kevin) |
+| :---: | :---: |
+| <img src="https://i.postimg.cc/FzXKcZGS/dragonite-esp.png" width="450"> | <img src="https://i.postimg.cc/nzBFHmZ0/kindpng-246018.png" width="320"> |
+
+</div>
+
+
 
 
