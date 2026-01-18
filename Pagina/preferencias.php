@@ -36,7 +36,7 @@ $tema_class = ($tema_actual === 'oscuro') ? 'oscuro' : '';
     <link rel="stylesheet" href="./src/styles/style.css">
 </head>
 <body>
-    <?php include_once './header.php' ?>
+    <?php include_once './includes/header.php' ?>
     <fieldset>
         <legend><?php echo ($idioma == 'espanol') ? "Ajustes" : "Settings"; ?></legend>
         
@@ -77,6 +77,6 @@ $tema_class = ($tema_actual === 'oscuro') ? 'oscuro' : '';
         </form>
 
     </fieldset>
-    <?php include_once './footer.php' ?>
+    <?php include_once './includes/footer.php' ?>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
-include './header.php';
-require "conexion.php";
+include './includes/header.php';
+require "./config/conexion.php";
 
 // ======================= GUARDAR PRODUCTO =======================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nombre_es'])) {
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nombre_es'])) {
     $precio = $_POST['precio'];
 
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-        $carpeta_destino = "imagenes/";
+        $carpeta_destino = "imagenes_db/";
         if (!is_dir($carpeta_destino)) mkdir($carpeta_destino, 0777, true);
 
         $extension = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
@@ -65,7 +65,6 @@ while ($row = $result->fetch_assoc()) {
 <main>
 
 
-
 <!-- LISTA DE PRODUCTOS -->
 <div class="contenido">
 <?php if (!empty($productos)): ?>
@@ -101,21 +100,8 @@ while ($row = $result->fetch_assoc()) {
 <?php endif; ?>
 </div>
 
-<p style="text-align: center;">
-        <?php 
-            echo ($idioma_actual == 'espanol') 
-                ? "Página en construcción."
-                : "Under construction.";
-        ?>
-        <?php if ($tema === 'oscuro'): ?>
-            <img style="width: 100px; display: block; margin: 10px auto;" src="https://i.pinimg.com/originals/8e/9d/47/8e9d4763350b27ca7ef4d32921528470.gif" alt="zi">
-        <?php else: ?>
-            <img style="width: 100px; display: block; margin: 10px auto;" src="https://i.pinimg.com/originals/e5/49/b1/e549b1e2cb82f0b15f69eb6f57ba7581.gif" alt="zi">
-        <?php endif; ?>
-</p>
-
 </main>
-<?php include './footer.php'; ?>
+<?php include './includes/footer.php'; ?>
 </body>
 </html>
 

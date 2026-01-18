@@ -1,6 +1,6 @@
 <?php
-include './header.php';
-require "conexion.php";
+include './includes/header.php';
+require "./config/conexion.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre_es = $_POST['nombre_es'];
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if ($stmt->execute()) {
             if ($stmt->affected_rows > 0) {
-                echo "<p style='color:green;'>";
+                echo "<p style='color:green; text-align:center;'>";
                 if($idioma == 'espanol') {
                     echo "Se han eliminado " . $stmt->affected_rows . " producto(s) correctamente.";
                 } else {
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 echo "</p>";
             } else {
-                echo "<p style='color:orange;'>";
+                echo "<p style='color:orange; text-align:center;'>";
                 if($idioma == 'espanol') {
                     echo "No se encontró ningún producto que coincida con esos nombres.";
                 } else {
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "</p>";
             }
         } else {
-            echo "<p style='color:red;'>";
+            echo "<p style='color:red; text-align:center;'>";
             if($idioma == 'espanol') {
                 echo "Error al eliminar el producto: " . $stmt->error;
             } else {
@@ -51,49 +51,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h2>
-    <?php if($idioma == 'espanol') {
-        echo 'Eliminar Producto';
-    } else {
-        echo 'Delete Product';
-    } ?>
-</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/styles/style.css">
+    <link rel="stylesheet" href="./src/styles/styleSettings.css">
+</head>
+<body>
+    <main>
+        <fieldset>
+            <legend>
+                <?php if($idioma == 'espanol') {
+                    echo 'Eliminar Producto';
+                } else {
+                    echo 'Delete Product';
+                } ?>
+            </legend>
 
-<p>
-    <?php if($idioma == 'espanol') {
-        echo 'Introduce el nombre en español <strong>o</strong> en inglés para eliminar el producto:';
-    } else {
-        echo 'Enter the name in Spanish <strong>or</strong> English to delete the product:';
-    } ?>
-</p>
+            <p style="<?php if($tema == 'oscuro'){
+                echo "color: white;";
+            } else {
+                echo "color: black;";
+            } ?>">
+                <?php if($idioma == 'espanol') {
+                    echo 'Introduce el nombre en español <strong>o</strong> en inglés para eliminar el producto:';
+                } else {
+                    echo 'Enter the name in Spanish <strong>or</strong> English to delete the product:';
+                } ?>
+            </p>
 
-<form action="" method="post">
-    <label>
-        <?php if($idioma == 'espanol') {
-            echo 'Nombre en Español:';
-        } else {
-            echo 'Name in Spanish:';
-        } ?>
-    </label>
-    <br>
-    <input type="text" name="nombre_es"><br><br>
+            <form action="" method="post">
+                <label>
+                    <?php if($idioma == 'espanol') {
+                        echo 'Nombre en Español:';
+                    } else {
+                        echo 'Name in Spanish:';
+                    } ?>
+                </label>
+                <br>
+                <input type="text" name="nombre_es"><br><br>
 
-    <label>
-        <?php if($idioma == 'espanol') {
-            echo 'Nombre en Inglés:';
-        } else {
-            echo 'Name in English:';
-        } ?>
-    </label>
-    <br>
-    <input type="text" name="nombre_en"><br><br>
+                <label>
+                    <?php if($idioma == 'espanol') {
+                        echo 'Nombre en Inglés:';
+                    } else {
+                        echo 'Name in English:';
+                    } ?>
+                </label>
+                <br>
+                <input type="text" name="nombre_en"><br><br>
 
-    <input type="submit" 
-    value="<?php echo ($idioma == 'espanol') ? 'Eliminar Producto' : 'Delete Product'; ?>" 
-    onclick="return confirm('<?php echo ($idioma == 'espanol') ? '¿Estás seguro de que deseas eliminar este producto?' : 'Are you sure you want to delete this product?'; ?>');"
->
+                <input type="submit" 
+                value="<?php echo ($idioma == 'espanol') ? 'Eliminar Producto' : 'Delete Product'; ?>" 
+                onclick="return confirm('<?php echo ($idioma == 'espanol') ? '¿Estás seguro de que deseas eliminar este producto?' : 'Are you sure you want to delete this product?'; ?>');">
 
-</form>
+            </form>
+        </fieldset>
 
-<?php include './footer.php'; ?>
+        <p style="text-align: center;">
+                <?php 
+                    echo ($idioma == 'espanol') 
+                        ? "Hola admin :D."
+                        : "Hello admin :D.";
+                ?>
+                <?php if ($tema === 'oscuro'): ?>
+                    <img style="width: 100px; display: block; margin: 10px auto;" src="https://i.pinimg.com/originals/8e/9d/47/8e9d4763350b27ca7ef4d32921528470.gif" alt="zi">
+                <?php else: ?>
+                    <img style="width: 100px; display: block; margin: 10px auto;" src="https://i.pinimg.com/originals/e5/49/b1/e549b1e2cb82f0b15f69eb6f57ba7581.gif" alt="zi">
+                <?php endif; ?>
+        </p>
+
+    </main>
+</body>
+<?php include './includes/footer.php'; ?>
+</html>
 

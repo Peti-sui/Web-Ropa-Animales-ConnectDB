@@ -1,5 +1,5 @@
 <?php
-require "conexion.php";
+require "./config/conexion.php";
 
 // 1. Gestión de Idioma
 $idioma_actual = (isset($_COOKIE['idiomita']) && $_COOKIE['idiomita'] == 'espanol') ? 'espanol' : 'ingles';
@@ -91,11 +91,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    header("Location: carrito.php");
+    header("Location: ./carrito.php");
     exit;
 }
 
-include './header.php'; 
+include './includes/header.php'; 
 ?>
 
 <!-- El resto de tu HTML permanece exactamente igual -->
@@ -109,80 +109,68 @@ include './header.php';
 </head>
 <body>
 <main class="contenido">
-    <fieldset style="width: 90%; max-width: 800px; margin: 20px auto; padding: 20px; border-radius: 10px;">
-    <legend style="padding: 0 10px; font-weight: bold;"><?php echo ($idioma_actual=='espanol') ? "Tu Cesta de la Compra" : "Your Shopping Cart"; ?></legend>
+    <fieldset class="contenedor-lista">
+        <legend><?php echo ($idioma_actual=='espanol') ? "Tu Cesta de la Compra" : "Your Shopping Cart"; ?></legend>
 
-    <div id="items-del-carrito">
-        <?php 
-        $hay_productos = false;
-        $total_precio = 0;
-        $cantidad_total = 0;
+        <div id="items-del-carrito">
+            <?php 
+            $hay_productos = false;
+            $total_precio = 0;
+            $cantidad_total = 0;
 
-        foreach ($listaCarrito as $id_id => $cant):
-            if (isset($productos_db[$id_id])):
-                $hay_productos = true;
-                $p = $productos_db[$id_id];
-                $nombre = ($idioma_actual=='espanol') ? $p['nombre_es'] : $p['nombre_en'];
-                $subtotal = $p['precio'] * $cant;
-                $total_precio += $subtotal;
-                $cantidad_total += $cant;
-        ?>
-        <div class="producto-carrito" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee;">
-            <div style="display: flex; align-items: center;">
-                <img src="<?php echo $p['imagen']; ?>" alt="img" style="width:60px; height:60px; object-fit:cover; margin-right:20px; border-radius:5px;">
-                <div>
-                    <h4 style="margin:0;"><?php echo $nombre; ?></h4>
-                    <p style="margin:5px 0 0; color:#666;"><?php echo number_format($p['precio'],2); ?> €</p>
-                    <div style="margin-top:5px; display:flex; align-items:center;">
-                        <form method="POST" style="display:inline;">
-                            <input type="hidden" name="producto_id" value="<?php echo $id_id; ?>">
-                            <button type="submit" name="cantidad_action" value="decrement" style="padding:2px 6px;">-</button>
-                        </form>
-                        <span style="margin:0 10px;"><?php echo $cant; ?></span>
-                        <form method="POST" style="display:inline;">
-                            <input type="hidden" name="producto_id" value="<?php echo $id_id; ?>">
-                            <button type="submit" name="cantidad_action" value="increment" style="padding:2px 6px;">+</button>
-                        </form>
-                        <span style="margin-left:15px;"><?php echo number_format($subtotal,2); ?> €</span>
+            foreach ($listaCarrito as $id_id => $cant):
+                if (isset($productos_db[$id_id])):
+                    $hay_productos = true;
+                    $p = $productos_db[$id_id];
+                    $nombre = ($idioma_actual=='espanol') ? $p['nombre_es'] : $p['nombre_en'];
+                    $subtotal = $p['precio'] * $cant;
+                    $total_precio += $subtotal;
+                    $cantidad_total += $cant;
+            ?>
+            <div class="item-fila">
+                <div class="info-basica">
+                    <img src="<?php echo $p['imagen']; ?>" alt="img">
+                    <div>
+                        <h4><?php echo $nombre; ?></h4>
+                        <p><?php echo number_format($p['precio'],2); ?> €</p>
+                        <div class="controles-cantidad">
+                            <form method="POST" style="display:inline;">
+                                <input type="hidden" name="producto_id" value="<?php echo $id_id; ?>">
+                                <button type="submit" name="cantidad_action" value="decrement" class="btn-qty">-</button>
+                            </form>
+                            <span style="margin:0 10px;"><?php echo $cant; ?></span>
+                            <form method="POST" style="display:inline;">
+                                <input type="hidden" name="producto_id" value="<?php echo $id_id; ?>">
+                                <button type="submit" name="cantidad_action" value="increment" class="btn-qty">+</button>
+                            </form>
+                            <span class="subtotal-texto"><?php echo number_format($subtotal,2); ?> €</span>
+                        </div>
                     </div>
                 </div>
+                <form method="POST">
+                    <input type="hidden" name="producto_id" value="<?php echo $id_id; ?>">
+                    <button type="submit" name="remove_cart" class="btn-rojo">
+                        <?php echo ($idioma_actual=='espanol') ? "Eliminar" : "Remove"; ?>
+                    </button>
+                </form>
             </div>
-            <form method="POST">
-                <input type="hidden" name="producto_id" value="<?php echo $id_id; ?>">
-                <button type="submit" name="remove_cart" style="background:#e74c3c; color:white; border:none; padding:8px 12px; cursor:pointer; border-radius:4px;">
-                    <?php echo ($idioma_actual=='espanol') ? "Eliminar" : "Remove"; ?>
-                </button>
+            <?php endif; endforeach; ?>
+        </div>
+
+        <?php if ($hay_productos): ?>
+        <div class="seccion-final">
+            <p><?php echo ($idioma_actual=='espanol') ? "Cantidad Total: " : "Total Quantity: "; ?><span><?php echo $cantidad_total; ?></span></p>
+            <p><?php echo ($idioma_actual=='espanol') ? "Precio Total: " : "Total Price: "; ?><span><?php echo number_format($total_precio,2); ?> €</span></p>
+            <form method="POST" class="mt-10">
+                <button type="submit" name="realizar_pedido" class="btn-azul"><?php echo ($idioma_actual == 'espanol') ? "Realizar Pedido" : "Place Order"; ?></button>
+            </form>
+            <form method="POST" class="mt-10">
+                <button type="submit" name="clear_cart" class="btn-gris"><?php echo ($idioma_actual == 'espanol') ? "Vaciar Carrito" : "Clear Cart"; ?></button>
             </form>
         </div>
-        <?php 
-            endif;
-        endforeach;
-
-        if (!$hay_productos): ?>
-            <p style="text-align:center; padding:20px;"><?php echo ($idioma_actual=='espanol') ? "Tu carrito está vacío." : "Your cart is empty."; ?></p>
         <?php endif; ?>
-    </div>
-
-    <?php if ($hay_productos): ?>
-    <div class="money" style="text-align:center; margin-top:20px;">
-        <p><?php echo ($idioma_actual=='espanol') ? "Cantidad Total: " : "Total Quantity: "; ?><span id="contador-carrito"><?php echo $cantidad_total; ?></span></p>
-        <p><?php echo ($idioma_actual=='espanol') ? "Precio Total: " : "Total Price: "; ?><span id="total-carrito"><?php echo number_format($total_precio,2); ?> €</span></p>
-        <form method="POST" style="margin-top:10px;">
-            <button type="submit" name="realizar_pedido" style="padding:10px 25px; border:none; border-radius:5px; background:#007bff; color:white; cursor:pointer;">
-                <?php echo ($idioma_actual=='espanol') ? "Realizar Pedido" : "Place Order"; ?>
-            </button>
-        </form>
-    </div>
-
-    <div style="text-align:center; margin-top:20px;">
-        <form method="POST">
-            <button type="submit" name="clear_cart" style="background:#555; color:white; padding:8px 20px; border:none; border-radius:5px; cursor:pointer;">
-                <?php echo ($idioma_actual=='espanol') ? "Vaciar Carrito" : "Clear Cart"; ?>
-            </button>
-        </form>
-    </div>
-    <?php endif; ?>
     </fieldset>
+    <?php include './includes/footer.php' ?>
 </main>
 </body>
 </html>

@@ -195,3 +195,100 @@ html.oscuro footer {
         grid-template-columns: auto auto auto auto auto;
     }
 }
+
+
+
+/* -------------------------- Carrito y Lista de Deseados ------------------------------------- */
+
+main .contenedor-lista {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+main .contenedor-lista legend {
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+.item-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-basica {
+    display: flex;
+    align-items: center;
+}
+
+.item-fila img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 20px;
+    border-radius: 5px;
+}
+
+.item-fila h4 { margin: 0; }
+.item-fila p { margin: 5px 0 0; color: #666; }
+
+/* Controles de cantidad exclusivos del carrito */
+.controles-cantidad {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-qty {
+    padding: 2px 6px;
+}
+
+.subtotal-texto {
+    margin-left: 15px;
+}
+
+/* Botones con los estilos exactos que tenías */
+.btn-rojo {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-azul {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-gris {
+    background: #555;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.seccion-final {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.mt-10 { margin-top: 10px; }
+
+/* --- Modo Oscuro --- */
+html.oscuro .contenedor-lista { background-color: #1e1e1e; border-color: #555; }
+html.oscuro .item-fila { border-bottom-color: #333; }
+html.oscuro .item-fila p { color: #bbb; }
