@@ -49,8 +49,8 @@ Pagina/
 ├── actions/
 ├── config/
 ├── DB/
-├── imgagenes_db/
-├── incldes/
+├── imagenes_db/
+├── includes/
 ├── src/
 ├── carrito.php
 ├── eliminar.php
