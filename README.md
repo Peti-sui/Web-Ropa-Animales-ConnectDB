@@ -48,11 +48,14 @@ Desarrollar un conjunto de páginas web que integren el uso de bases de datos pa
 Pagina/
 ├── actions/
 ├── config/
-├── css/
-├── img/
-├── login.php
-├── principal.php
+├── DB/
+├── imgagenes_db/
+├── incldes/
+├── src/
 ├── carrito.php
+├── eliminar.php
+├── guardar.php
+├── listaDeseados.php
 └── otros archivos PHP
 ```
 
