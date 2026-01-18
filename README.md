@@ -42,6 +42,45 @@ Desarrollar un conjunto de páginas web que integren el uso de bases de datos pa
 
 ---
 
+## Instalación
+
+1. Clonar el repositorio:
+
+   ```bash
+   git clone https://github.com/usuario/Web-Ropa-Animales-ConnectDB.git
+   ```
+
+2. Copiar el proyecto en el directorio `htdocs` del servidor local.
+
+3. Iniciar Apache y MySQL desde XAMPP.
+
+4. Crear la base de datos en phpMyAdmin con el nombre:
+
+   ```
+   Ropales
+   ```
+
+5. Configurar la conexión en el archivo:
+
+   ```
+   Pagina/config/conexion.php
+   ```
+
+   ```php
+   $host = "localhost";
+   $user = "root";
+   $password = "";
+   $db = "Ropales";
+   ```
+
+6. Acceder al proyecto desde el navegador:
+
+   ```
+   http://localhost/Web-Ropa-Animales-ConnectDB-main/Pagina/login.php
+   ```
+
+---
+   
 ## Estructura General
 
 ```
@@ -64,3 +103,5 @@ Pagina/
 ## Autores
 
 Rau00 y Peti-sui(Kevin)
+
+
